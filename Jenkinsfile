@@ -12,9 +12,11 @@ pipeline {
   stages {
 
     stage('Checkout') {
-      steps {
-        git 'https://github.com/Liki-git/jenkins-demo.git'
-      }
+  steps {
+    git branch: 'main', url: 'https://github.com/Liki-git/jenkins-demo.git'
+  }
+}
+
     }
 
     stage('Build') {
