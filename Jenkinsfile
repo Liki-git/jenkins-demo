@@ -1,20 +1,58 @@
 pipeline {
   agent any
+
+  tools {
+    maven 'Maven-3'
+  }
+
+  environment {
+    APP_NAME = "DemoApp"
+  }
+
   stages {
+
+    stage('Checkout') {
+      steps {
+        git 'https://github.com/Liki-git/jenkins-demo.git'
+      }
+    }
+
     stage('Build') {
       steps {
-        echo 'Build Stage from Jenkinsfile'
+        bat 'mvn clean compile'
       }
     }
+
     stage('Test') {
       steps {
-        echo 'Test Stage from Jenkinsfile'
+        bat 'mvn test'
+      }
+      post {
+        always {
+          junit '**/target/surefire-reports/*.xml'
+        }
       }
     }
+
+    stage('Package') {
+      steps {
+        bat 'mvn package'
+      }
+    }
+
     stage('Deploy') {
       steps {
-        echo 'Deploy Stage from Jenkinsfile'
+        echo "Deploying ${APP_NAME}"
       }
+    }
+  }
+
+  post {
+    success {
+      echo 'Pipeline Succeeded'
+    }
+    failure {
+      echo 'Pipeline Failed'
     }
   }
 }
